@@ -1,0 +1,116 @@
+--- Question 1
+select count(empno) as Total_Employees from emp;
+
+--- Question 2
+select count(distinct deptno) as Total_Departments from emp;
+
+--- Question 3
+select ename from emp;
+
+--- Question 4
+select dname from dept;
+
+--- Question 5
+select sum(sal) as Total_Salary from emp;
+
+--- Question 6
+select sum(comm) as Total_Commission_Paid from emp;
+
+--- Question 7
+select distinct job from emp where comm is not null;
+
+--- Question 8
+select sysdate from dual;
+
+--- Question 9
+select round(avg(sal),2) as Average_Salary from emp;
+
+--- Question 10
+select count(empno) as Number_of_Employees, deptno from emp 
+group by deptno
+order by deptno;
+
+--- Question 11
+select sum(sal) as Total_Salary, deptno from emp
+group by deptno
+order by deptno;
+
+--- Question 12
+select count(empno) as number_of_employees, job from emp
+group by job;
+
+--- Question 13
+select round(avg(sal),2) as Average_salary, job from emp
+group by job;
+
+--- Question 14
+select ename,to_char(hiredate,'DD') as Hire_Day,
+to_char(hiredate,'MONTH') as Hire_Month, 
+to_char(hiredate,'YYYY') as Hire_Year from emp;
+
+--- Question 15
+select empno,ename,deptno from emp 
+order by deptno;
+
+--- Question 16
+select empno,ename, job from emp
+order by job;
+
+--- Question 17
+select ename,sal from emp order by sal desc;
+
+--- Question 18
+select ename,deptno,sal from emp
+order by deptno,sal desc;
+
+--- Question 19
+select count(ename) from emp where length(ename)=6;
+
+--- Question 20
+select max(sal) as Maximum_Salary_Paid,min(sal) as Minimum_Salary_Paid from emp;
+
+--- Question 21
+select round(max(sal),2) as Maximum_Salary_Paid,round(min(sal),2) as Minimum_Salary_Paid,round(avg(sal),2) as Average_Salary_Paid, deptno
+from emp
+group by deptno
+order by deptno;
+
+--- Question 22
+select ename,empno,hiredate from emp
+order by to_char(hiredate,'YYYY'),to_char(hiredate,'MM'),to_char(hiredate,'DD');
+
+--- Question 23
+select ename,empno,hiredate from emp
+order by to_char(hiredate,'YYYY') desc,to_char(hiredate,'MM') desc ,to_char(hiredate,'DD') desc
+fetch first 1 row only;
+
+--- Question 24
+select ename from emp
+order by to_char(hiredate,'YYYY'),to_char(hiredate,'MM'),to_char(hiredate,'DD')
+fetch first 1 row only;
+
+--- Question 25
+select ename,hiredate,deptno from emp
+order by to_char(hiredate,'YYYY') desc, deptno;
+
+--- Question 26
+select ename,empno from emp
+where sal>=(select avg(sal) from emp);
+
+--- Question 27
+select ename,empno from emp
+where sal<=(select avg(sal) from emp);
+
+--- Question 28
+select ename,empno from emp
+where sal between 2000 and 4000;
+
+--- Question 29
+select ename,empno,sal as Maximum_Salary from emp
+where sal=(select max(sal) from emp);
+select ename,empno,sal as Minimum_Salary from emp
+where sal=(select min(sal) from emp);
+
+--- Question 30
+select count(hiredate) as Gifts_Required from emp 
+where to_char(hiredate,'MM')=01;

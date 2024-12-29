@@ -1,0 +1,149 @@
+-- Question 1 countries and their continents. Order the results by contitnent names
+
+select ct.Continent,cy.CountryName
+from Countries cy inner join
+continents ct 
+on cy.continent=ct.contid
+order by ct.continent;
+
+-- Question 2 Number of countries within each continent
+
+select ct.Continent,count(cy.countryid) as number_of_countries
+from Countries cy inner join
+continents ct 
+on cy.continent=ct.contid
+group by ct.continent
+order by ct.continent;
+
+-- Question 3 countries with no car makers
+
+select cy.countryname,cm.maker
+from countries cy
+left join car_makers cm
+on cy.countryid=cm.country
+where cm.maker is null;
+
+-- Question 4 List of car makers from japan
+
+select cm.maker,cm.fullname from
+car_makers cm inner join
+countries cy on 
+cm.country=cy.countryid
+where cy.countryname = 'japan';
+
+-- Question 5 List of Car Makers from France and USA
+
+select cy.countryname,cm.maker,cm.fullname from
+car_makers cm left join
+countries cy on 
+cm.country=cy.countryid
+where cy.countryid = 1 or cy.countryid = 3
+order by cy.countryname;
+
+-- Question 6 Country and Continent of VOVLO Car Maker
+
+select cm.maker,cm.fullname,cy.countryname,ct.continent
+from car_makers cm left join countries cy 
+on cm.country=cy.countryid
+left join continents ct
+on cy.continent=ct.contid
+where cm.id=21;
+
+-- Question 7 Car Models from FORD MOTOR COMPANY
+
+select cm.fullname,md.model
+from car_makers cm left join model_details md
+on cm.id=md.maker
+where cm.id = 5;
+
+-- Question 8 How many car models are made by Germany
+
+select count(md.model) as car_models_made_by_Germany
+from model_details md left join car_makers cm 
+on md.maker=cm.id
+left join countries cy on
+cm.country=cy.countryid
+where cy.countryid = 2;
+
+-- Question 9 Car models made by Japan alongwith maker details
+
+select cy.countryname,md.model,cm.id as car_maker_id,cm.maker,cm.fullname
+from model_details md left join car_makers cm 
+on md.maker=cm.id
+left join countries cy 
+on cm.country = cy.countryid
+where cy.countryid = 4
+order by cm.id;
+
+-- Question 10 Which car models have the highest and lowest values for the following attributes
+-- Extract the car maker and geography(country and continent) information also
+--mpg,cylinders,edispl,horsepower,weight,accel
+
+select
+min(cd.mpg) as Min_MPG, min(cd.mpg) as Max_MPG,
+min(cd.cylinders) as Min_Cylinders, MAX(cd.cylinders) as Max_Cylinders,
+min(cd.edispl) as Min_Edispl, MAX(cd.edispl) as Max_Edispl,
+min(cd.horsepower) as Min_Horsepower, MAX(cd.horsepower) as Max_Horsepower,
+min(cd.weight) as Min_Weight, MAX(cd.weight) as Max_Weight,
+min(cd.accel) as Min_Accel, MAX(cd.accel) as Max_Accel,
+cm.fullname, cy.countryname, ct.continent
+from car_details cd 
+left join car_names cn 
+on cd.id = cn.id 
+left join model_details md 
+on cn.model = md.model 
+left join car_makers cm 
+on md.maker = cm.id 
+left join countries cy 
+on cm.country = cy.countryid 
+left join continents ct 
+on cy.continent = ct.contid
+group by  
+grouping sets (
+(cn.model, cm.fullname, cy.countryname, ct.continent),
+()
+);
+
+-- Question 11 In which year most cars were made
+
+select year,count(year) as number_of_cars
+from car_details
+group by year
+order by count(year) desc
+fetch first 1 row only; 
+
+-- Question 12 Which year had less cars made
+
+select year,count(year) as number_of_cars
+from car_details
+group by year
+order by count(year) 
+fetch first 1 row only; 
+
+-- Question 13 Min, Max and Avg of the following attributes around year
+-- mpg,cylinders,edispl,horsepower,weight,accel
+
+select year,
+min(mpg),max(mpg),round(avg(mpg),2),
+min(cylinders),max(cylinders),round(avg(cylinders),2),
+min(edispl),max(edispl),round(avg(edispl),2),
+min(horsepower),max(horsepower),round(avg(horsepower),2),
+min(weight),max(weight),round(avg(weight),2),
+min(accel),max(accel),round(avg(accel),2)
+from car_details
+
+group by grouping sets(
+(year)
+);
+
+-- Question 14 Horsepower, weight, accel
+
+select round(avg(horsepower),2),round(median(horsepower),2),round(stddev(horsepower),2) from car_details;
+select round(avg(weight),2),round(median(weight),2),round(stddev(weight),2) from car_details;
+select round(avg(accel),2),round(median(accel),2),round(stddev(accel),2) from car_details;
+
+-- What do these measures convey about the horsepower and weight of the cars data
+
+-- 1) Approximately 63 percent of the cars made by car manufactures have horsepower below the average horsepower
+-- 2) Approximately 56 percent of the cars have weight below the average weight and . there is a high spread of weights of the cars from the mean weight (std deviation is approximately 850 units)
+-- 3) Mean and median of accel is approximately same which means accel is normally distributed and also standard deviation is very less(the spread of the accel values is closer to the mean value)
